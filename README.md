@@ -14,9 +14,9 @@ Trabajo practico sobre contenedores y micro-servicios de ARQUTECTURA DE SOFTWARE
 
 El clúster de prueba es un **Rancher Desktop** con la siguiente configuración
 
-![CR Config](./images/Rancher_Desktop_CR.png)
+![CR Config](./docs/images/Rancher_Desktop_CR.png)
 
-![Kubernetes Config](./images/Rancher_Desktop_KubeConf.png)
+![Kubernetes Config](./docs/images/Rancher_Desktop_KubeConf.png)
 
 **Inicializar el cluster**
 
@@ -46,14 +46,14 @@ Transformar la solución existente de `docker-compose` a Kubernetes con los sigu
 VERIFICACION:
 
 1. Hacer Fordward del servicio de API a una dirección en localhost. Por ejemplo si se desea exponer el puerto 8080 del servicio `mf-api` en <http://localhost:8081> se debe ejecutar el siguiente comando:
-   
+
    ```bash
    kubectl port-forward mf-api 8081:8080 -n jperez
    ```
 
-2. Acceder a la dirección asignada en el paso anterior subpath `/swagger`. Para el ejemplo anterior <http://localhost:8081/swagger>
+1. Acceder a la dirección asignada en el paso anterior subpath `/swagger`. Para el ejemplo anterior <http://localhost:8081/swagger>
 
-3. Ejecutar los endpoints con resultado `HTTP STATUS 200`
+1. Ejecutar los endpoints con resultado `HTTP STATUS 200`
 
 ### EXTRA: INGRESS + HTTPS 2 _(3 puntos)_
 
@@ -67,9 +67,8 @@ Exponer los servicios necesarios vía ingress y HTTPS
 
 VERIFICACION:
 
-2. Acceder a `https://api.<<nombre de namespace>>.localdev.me/swagger`
-
-3. ejecutar los endpoints con resultado `HTTP STATUS 200`
+1. Acceder a `https://api.<<nombre de namespace>>.localdev.me/swagger`
+1. ejecutar los endpoints con resultado `HTTP STATUS 200`
 
 ### EXTRA: MONITOREO _(2 puntos)_
 
