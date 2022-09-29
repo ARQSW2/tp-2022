@@ -1,6 +1,14 @@
 init-k8-cluster: install-nginx-ingress install-cert-manager install-prometheus-operator
 
+init-app:
+# crea el namespace si no existe
+	kubectl apply -f ./src/namespace.yaml
+# crea la instancia de rabbitmq en el namespace creado anteriormente
+	kubectl apply -f ./src/rabbitmq.yaml -n jperez
+
 install-nginx-ingress:
+# instala el nginx ingress-controller en el namespace ingress-nginx
+# recuerde tener deshabilitado el traefik de RancherDesktop antes de ejecutar.
 	helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
 
 install-cert-manager:

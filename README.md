@@ -5,9 +5,9 @@ Trabajo practico sobre contenedores y micro-servicios de ARQUTECTURA DE SOFTWARE
 ## Herramientas
 
 - Rancher Desktop (obligatorio)
-- Chocolatey (para windows): Facilita la instalacion de software en windows utilizando un Package Manager como `apt-get`
+- Chocolatey (para Windows): Facilita la instalación de software en Windows utilizando un Package Manager como `apt-get`
 - `choco install make marktext -Y` POWERSHELL EN MODO ADMINISTRADOR
-  - MAKE: Permite ejecutar archivos make en windows
+  - MAKE: Permite ejecutar archivos make en Windows
   - MARKTEXT: Editor de texto markdown
 
 ## Clúster de destino
@@ -18,42 +18,85 @@ El clúster de prueba es un **Rancher Desktop** con la siguiente configuración
 
 ![Kubernetes Config](./docs/images/Rancher_Desktop_KubeConf.png)
 
-**Inicializar el cluster**
+**Inicializar el clúster**
 
-Para inicializar el clister ejecute el comando `make init-k8-cluster` en el directorio raíz de este repositorio
+**IMPORTANTE: ANTES DE INICIALIZAR EL CLUSTER VERIFIQUE EL EL traefik este deshabilitado!!!!!!**
+
+Para inicializar el clister ejecute el comando `make init-k8-cluster` en el directorio raíz de este repositorio.
 
 Ese comando hará lo siguiente
 
 - Instalar **NGINX Ingress Controller** + **Cert Manager** + **SELF SIGNED CLUSTER ISSUER**
-- Instalar **kube-prometheus**
+- Instalar **kube-prometheus** encargado del monitoreo
+
+## Requisitos de entrega
+
+- Utilizar este repositorio como base y respete la estructura de directorios
+  
+  - `./docs` imágenes y diagrama/s de la solución
+  - `./resources` Archivo/s `yaml` de inicialización del clúster (que usa `Makefile`)
+  - `./src` Archivo/s `yaml` con la solución propuesta
+  - `./README.md` instructivo de implementación
+  - `Makefile` con los scripts para inicializar el clúster y aplicación
+
+- Generar un repositorio **PRIVADO** de GitHub , con permisos de colaborador para el usuario **rbrea-edu**
+
+- Editar `./src/namespace.yaml` con el namespace con su nombre. En el ejemplo `jperez`
+
+- Todos los recursos se deben implementar en el namespace creado previamente
+
+- Editar `Makefile`
+  
+  - Edite la función `init-app:` para que los recursos se implementen en el namespace con su nombre
+  
+  - Agregue las líneas que considere necesarias en la función `init-app`
+
+- Es un requisito indispensable para la entrega que la ejecución del comando `make init-app` se ejecute sin errores. PRUEBELO ANTES DE ENVIARLO
+
+- Se verificara la rama `main` de repositorio a no ser que se indique lo contrario
 
 ## Objetivos
 
-El trabajo practico se divide
+
 
 ### MINIMO REQUERIDO _(5 puntos)_
 
-Transformar la solución existente de `docker-compose` a Kubernetes con los siguientes requerimientos
+Implementar la solución https://github.com/ARQSW2/tp-containers a Kubernetes. La misma tiene un `docker-compose.yaml` y documentación que puede (y debe) usar de guía para la implementación en Kubernetes con los siguientes requerimientos :
 
-- Todo el trabajo debe estar contenido en un namespace con su nombre (Juan Perez= jperez)
-- Recursos por POD
+- Reserva y Limite de recursos (escalamiento vertical)
 - Detección de Fallos
-- Configuración Utilizando *ConfigMaps *y *Secrets*
+- Posibilidad de escalar Horizontalmente
+- Configuración Utilizando *ConfigMaps *y *Secrets* . 
 - Los servicios deben ser de tipo ClusterIp
-- Instructivo de implementación (puede ser dentro del README.ms)
-- Diagrama de la solución (puede ser una imagen o diagrama de app.diagrams.net DENTRO DEL REPOSITORIO)
+- Diagrama de la solución (hay un diagrama de ejemplo conexionado con app.diagrams.net  )
+
+---
+
+**IMPORTANTE:** Este repositorio base ya contiene la implementación del componente RabbitMQ, con **TODOS  LOS OBJETIVOS**.
+
+---
+
+---
+
+**IMPORTANTE:** El profesor puede realizar preguntas sobre el la solución implementada a fin de despejar dudar y/o complementar la nota del TP.
+
+---
 
 VERIFICACION:
 
-1. Hacer Fordward del servicio de API a una dirección en localhost. Por ejemplo si se desea exponer el puerto 8080 del servicio `mf-api` en <http://localhost:8081> se debe ejecutar el siguiente comando:
-
+1. Hacer Forward del servicio de API a una dirección en localhost. Ejemplo: Exponer el servicio `rabbitmq` puerto `management` (15672) en <http://localhost:8081>
+   
    ```bash
-   kubectl port-forward mf-api 8081:8080 -n jperez
+   kubectl port-forward service/rabbitmq 8081:15672 -n jperez
    ```
+   
+   O desde Rancher desktop
+   
+   <img title="" src="./docs/images/Rancher_Desktop_PortForward.png" alt="Rancher Port Forward" width="780">
 
-1. Acceder a la dirección asignada en el paso anterior subpath `/swagger`. Para el ejemplo anterior <http://localhost:8081/swagger>
+2. Acceder a la dirección asignada en el paso anterior subpath `/swagger`.
 
-1. Ejecutar los endpoints con resultado `HTTP STATUS 200`
+3. Ejecutar los endpoints con resultado `HTTP STATUS 200`
 
 ### EXTRA: INGRESS + HTTPS 2 _(3 puntos)_
 
@@ -65,27 +108,31 @@ Exponer los servicios necesarios vía ingress y HTTPS
 
 - Los endpoints de métricas NO DEBEN ESTAR EXPUESTOS
 
-VERIFICACION:
+**PRE-VERIFICACION:**
+A veces el ingress no funciona bien en Rancher Desktop. Para asegurarse de que esta funcionando debe acceder a http://localdev.me y ver la siguiente pantalla
+
+<img src="./docs/images/nginx_ingress_check.png" title="" alt="NGINX Ingress Check" width="780">
+
+Si no funciona verifique
+
+1. Que traefik este deshabilitado en las preferencias de RancherDesktop. si no estaba deshabilitado debe:
+   - Deshabilitarlo (Preferencias de RancherDesktop)
+   - Hacer un reset de kubernetes  (Troubleshooting de RancherDesktop)
+   - Inicializar el clúster nuevamente ejecutando el comando `make init-k8-cluster` (en la misma carpeta donde se encuentra `Makefile`)
+   - Desplegar su aplicación nuevamente con `make init-app`
+2. Reinicie la PC
+3. Espere unos 10 minutos
+4. Compruebe nuevamente
+
+**VERIFICACION:**
 
 1. Acceder a `https://api.<<nombre de namespace>>.localdev.me/swagger`
-1. ejecutar los endpoints con resultado `HTTP STATUS 200`
+2. ejecutar los *endpoints* con resultado `HTTP STATUS 200`
 
 ### EXTRA: MONITOREO _(2 puntos)_
 
 Conectar los *endpoint* de monitoreo al sistema de monitoreo del clúster utilizando el CRD `ServiceMonitor` y verificar utilizando la intancia de grafana de monitoreo en https://mon.localdev.me usuario `admin` clave `prom-operator`.
 
-Hay un dashboard de ASP.NET disponible para verificar la conexión de los servicios.
+Hay un dashboard de ASP.NET disponible para verificar la conexión de los servicios API y WORKER
 
-## Requisitos de entrega
-
-Se generara un repositorio **PRIVADO** de GitHub , con permisos de colaborador para el usuario **rbrea-edu**
-
-Estructura de directorios
-
-- `./src` Archivo/s `yaml` con la solución propuesta
-
-- `./README.md` con el instructivo de implementación
-
-- `./docs` imágenes y diagrama/s de la solución
-
-Para entregas parciales o totales la solución debe poder implementarse sin errores utilizando `NO MAS DE 3 LINEAS DE COMANDOS`
+## 
