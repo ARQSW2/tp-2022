@@ -57,8 +57,6 @@ Ese comando hará lo siguiente
 
 ## Objetivos
 
-
-
 ### MINIMO REQUERIDO _(5 puntos)_
 
 Implementar la solución https://github.com/ARQSW2/tp-containers a Kubernetes. La misma tiene un `docker-compose.yaml` y documentación que puede (y debe) usar de guía para la implementación en Kubernetes con los siguientes requerimientos :
@@ -66,7 +64,7 @@ Implementar la solución https://github.com/ARQSW2/tp-containers a Kubernetes. L
 - Reserva y Limite de recursos (escalamiento vertical)
 - Detección de Fallos
 - Posibilidad de escalar Horizontalmente
-- Configuración Utilizando *ConfigMaps *y *Secrets* . 
+- Configuración Utilizando *ConfigMaps *y *Secrets* .
 - Los servicios deben ser de tipo ClusterIp
 - Diagrama de la solución (hay un diagrama de ejemplo conexionado con app.diagrams.net  )
 
@@ -133,6 +131,14 @@ Si no funciona verifique
 
 Conectar los *endpoint* de monitoreo al sistema de monitoreo del clúster utilizando el CRD `ServiceMonitor` y verificar utilizando la intancia de grafana de monitoreo en https://mon.localdev.me usuario `admin` clave `prom-operator`.
 
-Hay un dashboard de ASP.NET disponible para verificar la conexión de los servicios API y WORKER
+Se han designado dos dashboards que muestran información extraída de los endpoints de monitoreo de API y WORKER
 
-## 
+- General/ prometheus-net : muestra información general sobre el comportamiento del servicio y request http
+  
+  ![DASHBOARD Prometheus NET](./docs/images/monitoring-prometheus-net.png)
+
+- General/ MassTransit Dashboard: muestra información general sobre el procesamiento de tareas y mensajes dentro del contenedor
+  
+  ![DASHBOARD MASSTRANSIT](./docs/images/monitoring-masstransit.png)
+
+    

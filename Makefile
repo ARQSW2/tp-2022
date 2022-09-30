@@ -28,4 +28,8 @@ install-prometheus-operator:
   kubectl apply -f ./resources/cert-manager-serviceMonitor.yaml -n monitoring
 # dashboard para rabbitmq
 	kubectl apply -f ./resources/rabbitmq-dashboard.yaml -n monitoring
+# dashboard para asp.net
+	kubectl apply -f ./resources/aspnet-dashboard.yaml -n monitoring
+# dashboard para masstransit
+	kubectl apply -f ./resources/masstransit-dashboard.yaml -n monitoring
 
