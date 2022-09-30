@@ -1,14 +1,29 @@
 # TRABAJO PRACTICO ARQUITECTURA DE SOFTWARE II
 
-Trabajo practico sobre contenedores y micro-servicios de ARQUTECTURA DE SOFTWARE 2 @ UNAHUR
+Trabajo practico sobre contenedores y micro-servicios de ARQUTECTURA DE SOFTWARE 2 @ UNAHUR.
+
+El trabajo practico tiene 3 puntos, descriptos en la sección [Objetivos](#objetivos), pero todos persiguen el mismo fin:
+
+**IMPLEMENTAR EN KUBERNETES (K8S) LAS SOLUCION <https://github.com/ARQSW2/tp-containers> QUE SE ENCUENTRA IMPLEMENTANDA UTILIZANDO DOCKER-COMPOSE**
+
+En este repositorio ya se encuentra migrado el componente `RabbitMQ` que puede usar de guía. También hay un diagrama **PARCIAL** que puede usar de base. Puede editarlo utilizando [draw.io](https://draw.io) ya sea en su versión desktop (instalada en la sección [Heramientas](#herramientas)).
+
+## Diagrama docker-compose
+
+![docker-compose diagram](https://raw.githubusercontent.com/ARQSW2/tp-containers/main/docs/diagram.svg)
+
+## Diagrama parcial en k8s
+
+![k8s diagram](./docs/diagram.svg)
 
 ## Herramientas
 
 - Rancher Desktop (obligatorio)
 - Chocolatey (para Windows): Facilita la instalación de software en Windows utilizando un Package Manager como `apt-get`
-- `choco install make marktext -Y` POWERSHELL EN MODO ADMINISTRADOR
+- `choco install make marktext drawio -Y` POWERSHELL EN MODO ADMINISTRADOR
   - MAKE: Permite ejecutar archivos make en Windows
   - MARKTEXT: Editor de texto markdown
+  - DRAW.IO: Editor de diagramas (puede usar la versión on-line si lo desea)
 
 ## Clúster de destino
 
@@ -20,7 +35,7 @@ El clúster de prueba es un **Rancher Desktop** con la siguiente configuración
 
 **Inicializar el clúster**
 
-**IMPORTANTE: ANTES DE INICIALIZAR EL CLUSTER VERIFIQUE EL EL traefik este deshabilitado!!!!!!**
+**IMPORTANTE: ANTES DE INICIALIZAR EL CLUSTER VERIFIQUE QUE traefik este deshabilitado!!!!!!**
 
 Para inicializar el clister ejecute el comando `make init-k8-cluster` en el directorio raíz de este repositorio.
 
@@ -28,6 +43,27 @@ Ese comando hará lo siguiente
 
 - Instalar **NGINX Ingress Controller** + **Cert Manager** + **SELF SIGNED CLUSTER ISSUER**
 - Instalar **kube-prometheus** encargado del monitoreo
+
+**VERIFICACION :** espere unos dos minutos (esto puede variar de acuerdo a la capacidad de la PC) e ingrese a <http://mon.localdev.me/> debería ver la siguiente pantalla:
+
+<img src="./docs/images/nginx_ingress_check.png" title="" alt="NGINX Ingress Check" width="780">
+
+---
+
+**CREDENCIALES GRAFANA:** usuario `admin` pass `prom-operator`
+
+---
+
+Si no funciona verifique
+
+1. Que **traefik **este deshabilitado en las preferencias de RancherDesktop. Si **traefik** no estaba deshabilitado debe:
+   - Deshabilitarlo (Preferencias de RancherDesktop)
+   - Hacer un reset de kubernetes  (Troubleshooting de RancherDesktop)
+   - Inicializar el clúster nuevamente ejecutando el comando `make init-k8-cluster` (en la misma carpeta donde se encuentra `Makefile`)
+2. Reinicie la PC
+3. Inicie Rancher Desktop
+4. Espere unos 10 minutos (puede ser menos tiempo )
+5. Verifique nuevamente
 
 ## Requisitos de entrega
 
@@ -57,7 +93,7 @@ Ese comando hará lo siguiente
 
 ## Objetivos
 
-### MINIMO REQUERIDO _(5 puntos)_
+### 1. MINIMO REQUERIDO _(5 puntos)_
 
 Implementar la solución https://github.com/ARQSW2/tp-containers a Kubernetes. La misma tiene un `docker-compose.yaml` y documentación que puede (y debe) usar de guía para la implementación en Kubernetes con los siguientes requerimientos :
 
@@ -96,7 +132,7 @@ VERIFICACION:
 
 3. Ejecutar los endpoints con resultado `HTTP STATUS 200`
 
-### EXTRA: INGRESS + HTTPS 2 _(3 puntos)_
+### 2. INGRESS + HTTPS 2 _(3 puntos)_
 
 Exponer los servicios necesarios vía ingress y HTTPS
 
@@ -106,28 +142,12 @@ Exponer los servicios necesarios vía ingress y HTTPS
 
 - Los endpoints de métricas NO DEBEN ESTAR EXPUESTOS
 
-**PRE-VERIFICACION:**
-A veces el ingress no funciona bien en Rancher Desktop. Para asegurarse de que esta funcionando debe acceder a http://localdev.me y ver la siguiente pantalla
-
-<img src="./docs/images/nginx_ingress_check.png" title="" alt="NGINX Ingress Check" width="780">
-
-Si no funciona verifique
-
-1. Que traefik este deshabilitado en las preferencias de RancherDesktop. si no estaba deshabilitado debe:
-   - Deshabilitarlo (Preferencias de RancherDesktop)
-   - Hacer un reset de kubernetes  (Troubleshooting de RancherDesktop)
-   - Inicializar el clúster nuevamente ejecutando el comando `make init-k8-cluster` (en la misma carpeta donde se encuentra `Makefile`)
-   - Desplegar su aplicación nuevamente con `make init-app`
-2. Reinicie la PC
-3. Espere unos 10 minutos
-4. Compruebe nuevamente
-
 **VERIFICACION:**
 
 1. Acceder a `https://api.<<nombre de namespace>>.localdev.me/swagger`
 2. ejecutar los *endpoints* con resultado `HTTP STATUS 200`
 
-### EXTRA: MONITOREO _(2 puntos)_
+### 3. MONITOREO _(2 puntos)_
 
 Conectar los *endpoint* de monitoreo al sistema de monitoreo del clúster utilizando el CRD `ServiceMonitor` y verificar utilizando la intancia de grafana de monitoreo en https://mon.localdev.me usuario `admin` clave `prom-operator`.
 
@@ -140,5 +160,3 @@ Se han designado dos dashboards que muestran información extraída de los endpo
 - General/ MassTransit Dashboard: muestra información general sobre el procesamiento de tareas y mensajes dentro del contenedor
   
   ![DASHBOARD MASSTRANSIT](./docs/images/monitoring-masstransit.png)
-
-    
