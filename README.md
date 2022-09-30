@@ -6,7 +6,7 @@ El trabajo practico tiene 3 puntos, descriptos en la sección [Objetivos](#objet
 
 **IMPLEMENTAR EN KUBERNETES (K8S) LAS SOLUCION <https://github.com/ARQSW2/tp-containers> QUE SE ENCUENTRA IMPLEMENTANDA UTILIZANDO DOCKER-COMPOSE**
 
-En este repositorio ya se encuentra migrado el componente `RabbitMQ` que puede usar de guía. También hay un diagrama **PARCIAL** que puede usar de base. Puede editarlo utilizando [draw.io](https://draw.io) ya sea en su versión desktop (instalada en la sección [Heramientas](#herramientas)).
+En este repositorio ya se encuentra migrado el componente `RabbitMQ` que puede usar de guía. También hay un diagrama **PARCIAL** que puede usar de base. Puede editarlo utilizando [draw.io](https://draw.io)  (la versión desktop es instalada en la sección [Heramientas](#herramientas)).
 
 ## Diagrama docker-compose
 
