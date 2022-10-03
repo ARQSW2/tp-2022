@@ -7,13 +7,13 @@ init-app:
 	kubectl apply -f ./src/rabbitmq.yaml -n jperez
 
 install-nginx-ingress:
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update jetstack
 # instala el nginx ingress-controller en el namespace ingress-nginx
 # recuerde tener deshabilitado el traefik de RancherDesktop antes de ejecutar.
 	helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
 
 install-cert-manager:
-	helm repo add jetstack https://charts.jetstack.io
-	helm repo update jetstack
 	helm upgrade --install cert-manager cert-manager --repo https://charts.jetstack.io --namespace cert-manager --create-namespace --version v1.8.0 --set installCRDs=true
 	kubectl apply -f resources/self-sign-cluster-issuer.yaml
 
@@ -25,7 +25,7 @@ install-prometheus-operator:
 # ingress para el monitoreo
 	kubectl apply -f ./resources/monitoring-ingress.yaml -n monitoring
 # monitoreo para cert manager
-  kubectl apply -f ./resources/cert-manager-serviceMonitor.yaml -n monitoring
+	kubectl apply -f ./resources/cert-manager-serviceMonitor.yaml -n monitoring
 # dashboard para rabbitmq
 	kubectl apply -f ./resources/rabbitmq-dashboard.yaml -n monitoring
 # dashboard para asp.net
